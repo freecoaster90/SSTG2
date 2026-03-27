@@ -4,64 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>서산 바이오·웰빙·연구 특구</title>
-<style>
-    /* flex 컨테이너: 자식들의 높이를 동일하게 맞춤 */
-    .flex-row {
-        display: flex;
-        gap: 20px;
-        align-items: stretch; /* 표 높이에 맞춰 이미지 사이드도 늘어남 */
-        margin-bottom: 30px;
-    }
+    <style>
+        :root {
+            --primary-color: #1a2a3a;
+            --accent-color: #007bff;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-radius: 16px;
+            --danger-color: #ff4d4f;
+        }
 
-    /* 표 영역 */
-    .table-side {
-        flex: 6; 
-    }
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
 
-    /* 이미지 영역 */
-    .image-side {
-        flex: 4;
-        display: flex;
-        flex-direction: column;
-    }
-
-    /* 이미지 컨테이너: 부모(.image-side)의 높이를 100% 상속 */
-    .visual-container {
-        width: 100%;
-        height: 100%;
-        min-height: 100%; /* 최소 높이 보장 */
-        background: #f8f9fa;
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid #eee;
-        display: flex; /* 내부 이미지 중앙 정렬용 */
-    }
-
-    /* 이미지 설정: 비율을 유지하며 컨테이너를 가득 채움 */
-    .visual-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* 이미지가 잘리더라도 영역을 꽉 채움 */
-        display: block;
-    }
-
-    /* 반응형: 화면이 좁아지면 세로로 배치하고 고정 비율 부여 */
-    @media (max-width: 900px) {
-        .flex-row {
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
             flex-direction: column;
+            gap: 24px;
         }
-        .visual-container {
-            aspect-ratio: 16 / 9; /* 모바일에서 적절한 높이 유지 */
-        }
-    }
 
-    /* 테이블 기본 스타일 */
-    .info-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-    .info-table th, .info-table td { border: 1px solid #edf2f7; padding: 12px 8px; text-align: center; }
-    .info-table th { background: #fcfcfc; color: #4a5568; font-weight: 600; }
-    .bg-sub { background-color: #f7fafc; font-weight: bold; }
-    .text-right { text-align: right; }
-</style>
+        header {
+            background: var(--primary-color);
+            color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+        }
+
+        h2 { 
+            font-size: 1.4rem;
+            border-left: 6px solid var(--accent-color); 
+            padding-left: 15px; 
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 20px;
+            align-items: stretch; /* 높이를 맞추기 위해 stretch로 변경 */
+        }
+
+        .table-side { flex: 6.5; }
+        .image-side { flex: 3.5; position: sticky; top: 20px; display: flex; align-items: center; }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .info-table th, .info-table td {
+            padding: 10px;
+            border: 1px solid #edf2f7;
+            text-align: center;
+        }
+        .info-table th { background: #fcfcfc; color: #666; font-weight: 600; }
+        
+        .text-left { text-align: left !important; padding-left: 15px !important; }
+        .text-right { text-align: right !important; padding-right: 15px !important; }
+        .bg-sub { background-color: #f9f9f9; font-weight: 600; }
+
+        .visual-container {
+            width: 100%;
+            height: 100%; /* 부모 높이에 맞춤 */
+            background: #f8f9fa;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .visual-container img {
+            max-width: 100%;
+            height: auto;
+            max-height: 100%;
+            display: block;
+            object-fit: contain;
+        }
+
+        .timeline-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+        .timeline-card {
+            border: 1px solid #eee;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .img-container-916 {
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            background: #f1f3f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 5px;
+        }
+        .img-container-916 img { width: 100%; height: 100%; object-fit: contain; }
+        .timeline-content { padding: 10px; text-align: center; }
+        .timeline-date { font-weight: 800; color: var(--accent-color); font-size: 0.95rem; }
 
         /* 메모장 스타일 */
         .memo-section { background: #fffde7; }
