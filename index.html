@@ -122,7 +122,7 @@
         .timeline-content { padding: 10px; text-align: center; }
         .timeline-date { font-weight: 800; color: var(--accent-color); font-size: 0.95rem; }
 
-        /* 메모장 스타일 */
+        /* 메모장 스타일 개선 */
         .memo-section { background: #fffde7; }
         .memo-input {
             width: 100%;
@@ -144,8 +144,19 @@
         }
         .todo-item.completed span { text-decoration: line-through; color: #aaa; }
         .todo-item input[type="checkbox"] { margin-right: 15px; transform: scale(1.2); cursor: pointer; }
-        .todo-item span { flex-grow: 1; font-size: 0.95rem; }
+        .todo-item span { flex-grow: 1; font-size: 0.95rem; cursor: pointer; padding: 5px; border-radius: 4px; }
+        .todo-item span:hover { background: #f0f0f0; }
         
+        /* 수정 중인 입력창 스타일 */
+        .edit-input {
+            flex-grow: 1;
+            font-size: 0.95rem;
+            padding: 4px 8px;
+            border: 1px solid var(--accent-color);
+            border-radius: 4px;
+            outline: none;
+        }
+
         .delete-btn {
             background: none;
             border: none;
@@ -219,7 +230,7 @@
             </div>
             <div class="image-side">
                 <div class="visual-container">
-                    <img src="images/8.조성현황.png" alt="조성현황" 
+                    <img src="images/8.조성현황.png" alt="조성현황"> 
                 </div>
             </div>
         </div>
@@ -252,7 +263,7 @@
             </div>
             <div class="image-side">
                 <div class="visual-container">
-                    <img src="images/9.분양현황.png" alt="분양현황" 
+                    <img src="images/9.분양현황.png" alt="분양현황">
                 </div>
             </div>
         </div>
@@ -269,16 +280,17 @@
     const todoInput = document.getElementById('todoInput');
     const todoList = document.getElementById('todoList');
 
-    // 1. 페이지 로드 시 저장된 메모 불러오기
+    // 1. 초기화 및 로드
     window.onload = () => {
         const savedTodos = JSON.parse(localStorage.getItem('seosan_todos')) || [
             { text: "2025년 사업 완료 시점 기반 마일스톤 점검", completed: false },
             { text: "농업바이오단지 집적화에 따른 세부 토지이용계획 확인", completed: false }
         ];
-        savedTodos.forEach(todo => renderTodo(todo.text, todo.completed));
+        // 아래에서 위로 쌓이므로 역순으로 렌더링하거나 prepend 사용
+        savedTodos.reverse().forEach(todo => renderTodo(todo.text, todo.completed));
     };
 
-    // 2. 메모 입력 이벤트
+    // 2. 신규 메모 입력
     todoInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && todoInput.value.trim()) {
             const text = todoInput.value.trim();
@@ -288,7 +300,7 @@
         }
     });
 
-    // 3. 화면에 메모 그리기
+    // 3. 화면 렌더링 로직 (수정 기능 포함)
     function renderTodo(text, completed) {
         const div = document.createElement('div');
         div.className = `todo-item ${completed ? 'completed' : ''}`;
@@ -304,6 +316,35 @@
         const span = document.createElement('span');
         span.textContent = text;
         
+        // --- 수정 기능 추가 ---
+        span.onclick = () => {
+            if (div.classList.contains('completed')) return; // 완료된 항목은 수정 불가
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'edit-input';
+            input.value = span.textContent;
+
+            const finishEdit = () => {
+                const newText = input.value.trim();
+                if (newText) {
+                    span.textContent = newText;
+                    input.replaceWith(span);
+                    saveTodos();
+                } else {
+                    // 비어있으면 삭제 처리 또는 원래대로
+                    input.replaceWith(span);
+                }
+            };
+
+            input.onblur = finishEdit;
+            input.onkeypress = (e) => { if (e.key === 'Enter') finishEdit(); };
+
+            span.replaceWith(input);
+            input.focus();
+        };
+        // ---------------------
+        
         const delBtn = document.createElement('button');
         delBtn.innerHTML = '&times;';
         delBtn.className = 'delete-btn';
@@ -318,13 +359,18 @@
         todoList.prepend(div);
     }
 
-    // 4. 로컬 스토리지에 데이터 저장
+    // 4. 로컬 스토리지 저장
     function saveTodos() {
         const todos = [];
-        document.querySelectorAll('.todo-item').forEach(item => {
+        // 화면에 보이는 순서대로 긁어옴 (prepend이므로 역순 저장 고려)
+        const items = Array.from(document.querySelectorAll('.todo-item'));
+        items.reverse().forEach(item => {
+            const span = item.querySelector('span');
+            // 수정 중일 때는 input에서 값을 가져와야 함
+            const text = span ? span.textContent : item.querySelector('.edit-input').value;
             todos.push({
-                text: item.querySelector('span').textContent,
-                completed: item.querySelector('input').checked
+                text: text,
+                completed: item.querySelector('input[type="checkbox"]').checked
             });
         });
         localStorage.setItem('seosan_todos', JSON.stringify(todos));
