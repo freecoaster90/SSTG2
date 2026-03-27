@@ -147,7 +147,6 @@
         .todo-item span { flex-grow: 1; font-size: 0.95rem; cursor: pointer; padding: 5px; border-radius: 4px; }
         .todo-item span:hover { background: #f0f0f0; }
         
-        /* 수정 중인 입력창 스타일 */
         .edit-input {
             flex-grow: 1;
             font-size: 0.95rem;
@@ -270,38 +269,67 @@
     </section>
 
     <section class="card memo-section">
-        <h2>5. 현안 메모 관리</h2>
+        <h2>5. 현안 메모 관리 (실시간 공유)</h2>
         <input type="text" id="todoInput" class="memo-input" placeholder="새로운 현안을 입력하고 Enter를 누르세요...">
         <div id="todoList"></div>
     </section>
 </div>
 
-<script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // 1. 사용자 Firebase 설정
+    const firebaseConfig = {
+        apiKey: "AIzaSyAjTduWFsghyfjduX6CXRWk6ZMU5ENMJf4",
+        authDomain: "sstg-dd698.firebaseapp.com",
+        databaseURL: "https://sstg-dd698-default-rtdb.firebaseio.com",
+        projectId: "sstg-dd698",
+        storageBucket: "sstg-dd698.firebasestorage.app",
+        messagingSenderId: "638846833000",
+        appId: "1:638846833000:web:6ae8367812830a7ecf06dd",
+        measurementId: "G-1DPVPCX5KK"
+    };
+
+    // 2. 초기화
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const todoRef = ref(db, 'seosan_todos');
+
     const todoInput = document.getElementById('todoInput');
     const todoList = document.getElementById('todoList');
 
-    // 1. 초기화 및 로드
-    window.onload = () => {
-        const savedTodos = JSON.parse(localStorage.getItem('seosan_todos')) || [
-            { text: "2025년 사업 완료 시점 기반 마일스톤 점검", completed: false },
-            { text: "농업바이오단지 집적화에 따른 세부 토지이용계획 확인", completed: false }
-        ];
-        // 아래에서 위로 쌓이므로 역순으로 렌더링하거나 prepend 사용
-        savedTodos.reverse().forEach(todo => renderTodo(todo.text, todo.completed));
-    };
+    // 3. 실시간 데이터 수신 및 렌더링
+    onValue(todoRef, (snapshot) => {
+        todoList.innerHTML = '';
+        const data = snapshot.val();
+        
+        if (data) {
+            // 타임스탬프 기준으로 정렬하여 최신 현안이 위로 오게 배치
+            const items = Object.keys(data).map(id => ({ id, ...data[id] }))
+                            .sort((a, b) => b.timestamp - a.timestamp);
 
-    // 2. 신규 메모 입력
+            items.forEach(item => {
+                renderTodo(item.id, item.text, item.completed);
+            });
+        }
+    });
+
+    // 4. 신규 데이터 입력
     todoInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && todoInput.value.trim()) {
-            const text = todoInput.value.trim();
-            renderTodo(text, false);
-            saveTodos();
+            const newTodo = {
+                text: todoInput.value.trim(),
+                completed: false,
+                timestamp: Date.now()
+            };
+            push(todoRef, newTodo);
             todoInput.value = '';
         }
     });
 
-    // 3. 화면 렌더링 로직 (수정 기능 포함)
-    function renderTodo(text, completed) {
+    // 5. 화면 렌더링 및 개별 항목 제어 로직
+    function renderTodo(id, text, completed) {
         const div = document.createElement('div');
         div.className = `todo-item ${completed ? 'completed' : ''}`;
         
@@ -309,71 +337,45 @@
         chk.type = 'checkbox';
         chk.checked = completed;
         chk.onchange = () => {
-            div.classList.toggle('completed');
-            saveTodos();
+            update(ref(db, `seosan_todos/${id}`), { completed: chk.checked });
         };
         
         const span = document.createElement('span');
         span.textContent = text;
         
-        // --- 수정 기능 추가 ---
+        // 클릭 시 수정 모드
         span.onclick = () => {
-            if (div.classList.contains('completed')) return; // 완료된 항목은 수정 불가
-
+            if (completed) return;
             const input = document.createElement('input');
-            input.type = 'text';
             input.className = 'edit-input';
             input.value = span.textContent;
 
             const finishEdit = () => {
                 const newText = input.value.trim();
-                if (newText) {
-                    span.textContent = newText;
-                    input.replaceWith(span);
-                    saveTodos();
+                if (newText && newText !== text) {
+                    update(ref(db, `seosan_todos/${id}`), { text: newText });
                 } else {
-                    // 비어있으면 삭제 처리 또는 원래대로
                     input.replaceWith(span);
                 }
             };
 
             input.onblur = finishEdit;
             input.onkeypress = (e) => { if (e.key === 'Enter') finishEdit(); };
-
             span.replaceWith(input);
             input.focus();
         };
-        // ---------------------
-        
+
         const delBtn = document.createElement('button');
         delBtn.innerHTML = '&times;';
         delBtn.className = 'delete-btn';
         delBtn.onclick = () => {
             if(confirm('이 현안을 삭제하시겠습니까?')) {
-                div.remove();
-                saveTodos();
+                remove(ref(db, `seosan_todos/${id}`));
             }
         };
         
         div.append(chk, span, delBtn);
-        todoList.prepend(div);
-    }
-
-    // 4. 로컬 스토리지 저장
-    function saveTodos() {
-        const todos = [];
-        // 화면에 보이는 순서대로 긁어옴 (prepend이므로 역순 저장 고려)
-        const items = Array.from(document.querySelectorAll('.todo-item'));
-        items.reverse().forEach(item => {
-            const span = item.querySelector('span');
-            // 수정 중일 때는 input에서 값을 가져와야 함
-            const text = span ? span.textContent : item.querySelector('.edit-input').value;
-            todos.push({
-                text: text,
-                completed: item.querySelector('input[type="checkbox"]').checked
-            });
-        });
-        localStorage.setItem('seosan_todos', JSON.stringify(todos));
+        todoList.appendChild(div);
     }
 </script>
 </body>
