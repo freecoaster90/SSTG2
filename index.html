@@ -58,11 +58,11 @@
         .flex-row {
             display: flex;
             gap: 20px;
-            align-items: flex-start;
+            align-items: stretch; /* 높이를 맞추기 위해 stretch로 변경 */
         }
 
         .table-side { flex: 6.5; }
-        .image-side { flex: 3.5; position: sticky; top: 20px; }
+        .image-side { flex: 3.5; position: sticky; top: 20px; display: flex; align-items: center; }
 
         .info-table {
             width: 100%;
@@ -82,6 +82,7 @@
 
         .visual-container {
             width: 100%;
+            height: 100%; /* 부모 높이에 맞춤 */
             background: #f8f9fa;
             border-radius: 12px;
             overflow: hidden;
@@ -93,6 +94,7 @@
         .visual-container img {
             max-width: 100%;
             height: auto;
+            max-height: 100%;
             display: block;
             object-fit: contain;
         }
@@ -122,7 +124,7 @@
         .timeline-content { padding: 10px; text-align: center; }
         .timeline-date { font-weight: 800; color: var(--accent-color); font-size: 0.95rem; }
 
-        /* 메모장 스타일 개선 */
+        /* 메모장 스타일 */
         .memo-section { background: #fffde7; }
         .memo-input {
             width: 100%;
@@ -169,9 +171,34 @@
         }
         .delete-btn:hover { opacity: 1; }
 
+        /* 모바일 대응: 좌우 배치 강제 유지 */
         @media (max-width: 900px) {
-            .flex-row { flex-direction: column; }
-            .image-side { order: -1; width: 100%; }
+            body { padding: 10px; }
+            .container { gap: 15px; }
+            header { padding: 15px; }
+            header h1 { font-size: 1.1rem; }
+            .card { padding: 15px; }
+            h2 { font-size: 1.1rem; padding-left: 10px; margin-bottom: 15px; }
+
+            /* 밀리지 않게 가로 배치 유지 */
+            .flex-row { 
+                flex-direction: row !important; 
+                gap: 10px; 
+            }
+            .table-side { flex: 6; }
+            .image-side { flex: 4; position: relative; top: 0; }
+
+            /* 표 글자 크기 대폭 축소 (가로 공간 확보) */
+            .info-table { font-size: 0.65rem; }
+            .info-table th, .info-table td { padding: 5px 2px; }
+            
+            /* 타임라인 가로 배치 */
+            .timeline-container {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 5px;
+            }
+            .timeline-date { font-size: 0.5rem; letter-spacing: -1px; }
+            .timeline-content { padding: 5px 2px; }
         }
     </style>
 </head>
@@ -183,8 +210,8 @@
     <section class="card">
         <h2>1. 특구 개요</h2>
         <table class="info-table">
-            <tr><th width="20%">사업명</th><td class="text-left">서산 바이오·웰빙·연구 특구</td></tr>
-            <tr><th>위치</th><td class="text-left">충남도 서산시 부석면 서산간척지 B지구 일원</td></tr>
+            <tr><th width="25%">사업명</th><td class="text-left">서산 바이오·웰빙·연구 특구</td></tr>
+            <tr><th>위치</th><td class="text-left">충남 서산시 부석면 일원</td></tr>
             <tr><th>면적</th><td class="text-left">5,998,500㎡ (181만평)</td></tr>
             <tr><th>사업자</th><td class="text-left">현대건설, 현대모비스, 서산시</td></tr>
             <tr><th>시행기간</th><td class="text-left">2008년 ~ 2025년</td></tr>
@@ -194,11 +221,11 @@
     <section class="card">
         <h2>2. 개발계획 변경 연혁</h2>
         <div class="timeline-container">
-            <div class="timeline-card"><div class="img-container-916"><img src="images/1.최초지정(2008).jpg" alt="2008"></div><div class="timeline-content"><span class="timeline-date">최초지정 (2008)</span></div></div>
-            <div class="timeline-card"><div class="img-container-916"><img src="images/2.2차특구변경(2013).jpg" alt="2013"></div><div class="timeline-content"><span class="timeline-date">2차 변경 (2013)</span></div></div>
-            <div class="timeline-card"><div class="img-container-916"><img src="images/3.4차특구변경(2015).jpg" alt="2015"></div><div class="timeline-content"><span class="timeline-date">4차 변경 (2015)</span></div></div>
-            <div class="timeline-card"><div class="img-container-916"><img src="images/4.5차특구변경(2019).jpg" alt="2019"></div><div class="timeline-content"><span class="timeline-date">5차 변경 (2019)</span></div></div>
-            <div class="timeline-card"><div class="img-container-916"><img src="images/5.6차특구변경(2023).jpg" alt="2023"></div><div class="timeline-content"><span class="timeline-date">6차 변경 (2023)</span></div></div>
+            <div class="timeline-card"><div class="img-container-916"><img src="images/1.최초지정(2008).jpg" alt="2008"></div><div class="timeline-content"><span class="timeline-date">최초 (2008)</span></div></div>
+            <div class="timeline-card"><div class="img-container-916"><img src="images/2.2차특구변경(2013).jpg" alt="2013"></div><div class="timeline-content"><span class="timeline-date">2차 (2013)</span></div></div>
+            <div class="timeline-card"><div class="img-container-916"><img src="images/3.4차특구변경(2015).jpg" alt="2015"></div><div class="timeline-content"><span class="timeline-date">4차 (2015)</span></div></div>
+            <div class="timeline-card"><div class="img-container-916"><img src="images/4.5차특구변경(2019).jpg" alt="2019"></div><div class="timeline-content"><span class="timeline-date">5차 (2019)</span></div></div>
+            <div class="timeline-card"><div class="img-container-916"><img src="images/5.6차특구변경(2023).jpg" alt="2023"></div><div class="timeline-content"><span class="timeline-date">6차 (2023)</span></div></div>
         </div>
     </section>
 
@@ -208,22 +235,18 @@
             <div class="table-side">
                 <table class="info-table">
                     <thead>
-                        <tr><th>구분</th><th>세부 구분</th><th>면적(만평)</th><th>비율(%)</th></tr>
+                        <tr><th>구분</th><th>세부</th><th>면적</th><th>비율</th></tr>
                     </thead>
                     <tbody>
-                        <tr class="bg-sub"><td>합계</td><td>-</td><td class="text-right">73.2</td><td class="text-right">100.0%</td></tr>
-                        <tr class="bg-sub"><td rowspan="5">개발행위허가</td><td>소계</td><td class="text-right">61.0</td><td class="text-right">83.3%</td></tr>
-                        <tr><td>현대모비스</td><td class="text-right">35.0</td><td class="text-right">47.8%</td></tr>
-                        <tr><td>현대자동차</td><td class="text-right">16.0</td><td class="text-right">21.9%</td></tr>
+                        <tr class="bg-sub"><td>합계</td><td>-</td><td class="text-right">73.2</td><td class="text-right">100%</td></tr>
+                        <tr class="bg-sub"><td rowspan="5">개발허가</td><td>소계</td><td class="text-right">61.0</td><td class="text-right">83.3%</td></tr>
+                        <tr><td>모비스</td><td class="text-right">35.0</td><td class="text-right">47.8%</td></tr>
+                        <tr><td>현대차</td><td class="text-right">16.0</td><td class="text-right">21.9%</td></tr>
                         <tr><td>나인팜</td><td class="text-right">4.6</td><td class="text-right">6.3%</td></tr>
-                        <tr><td>도로법면 등</td><td class="text-right">5.4</td><td class="text-right">7.4%</td></tr>
-                        <tr class="bg-sub"><td rowspan="7">실시계획인가</td><td>소계</td><td class="text-right">12.2</td><td class="text-right">16.7%</td></tr>
-                        <tr><td>검은여공원</td><td class="text-right">2.0</td><td class="text-right">2.7%</td></tr>
-                        <tr><td>남북도로 등</td><td class="text-right">5.1</td><td class="text-right">7.0%</td></tr>
-                        <tr><td>동서도로 등</td><td class="text-right">1.4</td><td class="text-right">1.9%</td></tr>
-                        <tr><td>완충녹지 등</td><td class="text-right">1.8</td><td class="text-right">2.5%</td></tr>
-                        <tr><td>기타 도로</td><td class="text-right">1.2</td><td class="text-right">1.6%</td></tr>
-                        <tr><td>도로</td><td class="text-right">0.7</td><td class="text-right">1.0%</td></tr>
+                        <tr><td>기타</td><td class="text-right">5.4</td><td class="text-right">7.4%</td></tr>
+                        <tr class="bg-sub"><td rowspan="3">실시인가</td><td>소계</td><td class="text-right">12.2</td><td class="text-right">16.7%</td></tr>
+                        <tr><td>공원</td><td class="text-right">2.0</td><td class="text-right">2.7%</td></tr>
+                        <tr><td>도로등</td><td class="text-right">10.2</td><td class="text-right">14.0%</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -241,22 +264,18 @@
             <div class="table-side">
                 <table class="info-table">
                     <thead>
-                        <tr><th>구분</th><th>세부 구분</th><th>면적(만평)</th><th>비율(%)</th></tr>
+                        <tr><th>구분</th><th>세부</th><th>면적</th><th>비율</th></tr>
                     </thead>
                     <tbody>
-                        <tr class="bg-sub"><td>계</td><td>-</td><td class="text-right">125.0</td><td class="text-right">100.0%</td></tr>
-                        <tr><td rowspan="5">기매각</td><td>소계</td><td class="text-right">44.0</td><td class="text-right">35.2%</td></tr>
-                        <tr><td>현대모비스</td><td class="text-right">35.0</td><td class="text-right">28.0%</td></tr>
-                        <tr><td>충청남도</td><td class="text-right">3.0</td><td class="text-right">2.4%</td></tr>
-                        <tr><td>나인팜</td><td class="text-right">5.0</td><td class="text-right">4.0%</td></tr>
-                        <tr><td>한국자동차연구원</td><td class="text-right">1.0</td><td class="text-right">0.8%</td></tr>
-                        <tr><td rowspan="3">임대</td><td>소계</td><td class="text-right">25.0</td><td class="text-right">20.0%</td></tr>
-                        <tr><td>현대자동차</td><td class="text-right">16.0</td><td class="text-right">12.8%</td></tr>
-                        <tr><td>충청남도</td><td class="text-right">9.0</td><td class="text-right">7.2%</td></tr>
-                        <tr><td rowspan="4">잔여</td><td>소계</td><td class="text-right">56.0</td><td class="text-right">44.8%</td></tr>
-                        <tr><td>농업바이오단지</td><td class="text-right">5.0</td><td class="text-right">4.0%</td></tr>
+                        <tr class="bg-sub"><td>계</td><td>-</td><td class="text-right">125.0</td><td class="text-right">100%</td></tr>
+                        <tr><td rowspan="3">기매각</td><td>소계</td><td class="text-right">44.0</td><td class="text-right">35.2%</td></tr>
+                        <tr><td>모비스</td><td class="text-right">35.0</td><td class="text-right">28.0%</td></tr>
+                        <tr><td>기타</td><td class="text-right">9.0</td><td class="text-right">7.2%</td></tr>
+                        <tr><td rowspan="2">임대</td><td>현대차</td><td class="text-right">16.0</td><td class="text-right">12.8%</td></tr>
+                        <tr><td>충남</td><td class="text-right">9.0</td><td class="text-right">7.2%</td></tr>
+                        <tr><td rowspan="3">잔여</td><td>소계</td><td class="text-right">56.0</td><td class="text-right">44.8%</td></tr>
                         <tr><td>연구시설</td><td class="text-right">19.0</td><td class="text-right">15.2%</td></tr>
-                        <tr><td>주거, 상업, 테마 등</td><td class="text-right">32.0</td><td class="text-right">25.6%</td></tr>
+                        <tr><td>상업등</td><td class="text-right">37.0</td><td class="text-right">29.6%</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -270,7 +289,7 @@
 
     <section class="card memo-section">
         <h2>5. 현안 메모 관리 (실시간 공유)</h2>
-        <input type="text" id="todoInput" class="memo-input" placeholder="새로운 현안을 입력하고 Enter를 누르세요...">
+        <input type="text" id="todoInput" class="memo-input" placeholder="새로운 현안을 입력하고 Enter...">
         <div id="todoList"></div>
     </section>
 </div>
@@ -279,7 +298,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // 1. 사용자 Firebase 설정
     const firebaseConfig = {
         apiKey: "AIzaSyAjTduWFsghyfjduX6CXRWk6ZMU5ENMJf4",
         authDomain: "sstg-dd698.firebaseapp.com",
@@ -291,7 +309,6 @@
         measurementId: "G-1DPVPCX5KK"
     };
 
-    // 2. 초기화
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const todoRef = ref(db, 'seosan_todos');
@@ -299,36 +316,27 @@
     const todoInput = document.getElementById('todoInput');
     const todoList = document.getElementById('todoList');
 
-    // 3. 실시간 데이터 수신 및 렌더링
     onValue(todoRef, (snapshot) => {
         todoList.innerHTML = '';
         const data = snapshot.val();
-        
         if (data) {
-            // 타임스탬프 기준으로 정렬하여 최신 현안이 위로 오게 배치
             const items = Object.keys(data).map(id => ({ id, ...data[id] }))
                             .sort((a, b) => b.timestamp - a.timestamp);
-
-            items.forEach(item => {
-                renderTodo(item.id, item.text, item.completed);
-            });
+            items.forEach(item => renderTodo(item.id, item.text, item.completed));
         }
     });
 
-    // 4. 신규 데이터 입력
     todoInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && todoInput.value.trim()) {
-            const newTodo = {
+            push(todoRef, {
                 text: todoInput.value.trim(),
                 completed: false,
                 timestamp: Date.now()
-            };
-            push(todoRef, newTodo);
+            });
             todoInput.value = '';
         }
     });
 
-    // 5. 화면 렌더링 및 개별 항목 제어 로직
     function renderTodo(id, text, completed) {
         const div = document.createElement('div');
         div.className = `todo-item ${completed ? 'completed' : ''}`;
@@ -336,29 +344,20 @@
         const chk = document.createElement('input');
         chk.type = 'checkbox';
         chk.checked = completed;
-        chk.onchange = () => {
-            update(ref(db, `seosan_todos/${id}`), { completed: chk.checked });
-        };
+        chk.onchange = () => update(ref(db, `seosan_todos/${id}`), { completed: chk.checked });
         
         const span = document.createElement('span');
         span.textContent = text;
-        
-        // 클릭 시 수정 모드
         span.onclick = () => {
             if (completed) return;
             const input = document.createElement('input');
             input.className = 'edit-input';
             input.value = span.textContent;
-
             const finishEdit = () => {
                 const newText = input.value.trim();
-                if (newText && newText !== text) {
-                    update(ref(db, `seosan_todos/${id}`), { text: newText });
-                } else {
-                    input.replaceWith(span);
-                }
+                if (newText && newText !== text) update(ref(db, `seosan_todos/${id}`), { text: newText });
+                else input.replaceWith(span);
             };
-
             input.onblur = finishEdit;
             input.onkeypress = (e) => { if (e.key === 'Enter') finishEdit(); };
             span.replaceWith(input);
@@ -368,11 +367,7 @@
         const delBtn = document.createElement('button');
         delBtn.innerHTML = '&times;';
         delBtn.className = 'delete-btn';
-        delBtn.onclick = () => {
-            if(confirm('이 현안을 삭제하시겠습니까?')) {
-                remove(ref(db, `seosan_todos/${id}`));
-            }
-        };
+        delBtn.onclick = () => { if(confirm('삭제하시겠습니까?')) remove(ref(db, `seosan_todos/${id}`)); };
         
         div.append(chk, span, delBtn);
         todoList.appendChild(div);
