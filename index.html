@@ -3,116 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>사업설명 대시보드</title>
+    <title>사업설명 상세 대시보드</title>
     <style>
-        :root {
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-            --primary-color: #2c3e50;
-        }
-
+        /* 여백 제거 및 배경색 설정 */
         body {
-            font-family: 'Pretendard', sans-serif;
-            background-color: var(--bg-color);
             margin: 0;
-            padding: 40px 20px;
-            color: #333;
+            padding: 0;
+            background-color: #1a1a1a; /* 배경을 어둡게 하면 이미지가 더 돋보입니다 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 50px;
+        /* 이미지 컨테이너: 기기 너비에 맞춤 */
+        .image-container {
+            width: 100%;
+            max-width: 1200px; /* 너무 퍼지지 않게 최대 너비 제한 (자유롭게 조절 가능) */
+            line-height: 0;   /* 이미지 사이의 미세한 틈새 제거 */
         }
 
-        header h1 {
-            color: var(--primary-color);
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        /* 반응형 그리드 시스템 */
-        .dashboard-grid {
-            display: grid;
-            gap: 25px;
-            max-width: 1200px;
-            margin: 0 auto;
-            /* 기본: 모바일 (1열) */
-            grid-template-columns: repeat(1, 1fr);
-        }
-
-        /* 태블릿: 2열 */
-        @media (min-width: 768px) {
-            .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        /* 데스크톱: 3열 */
-        @media (min-width: 1024px) {
-            .dashboard-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            border: 1px solid #eee;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-        }
-
-        .card img {
+        /* 이미지 스타일: 비율 유지하며 연속 배치 */
+        .business-slide {
             width: 100%;
             height: auto;
             display: block;
-            aspect-ratio: 16 / 9; /* 이미지 비율 유지 (필요시 조정) */
-            object-fit: cover;
+            margin: 0;
+            padding: 0;
+            /* 부드러운 로딩 효과 */
+            animation: fadeIn 1s ease-in-out;
         }
 
-        .card-info {
-            padding: 15px;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 상단 제목 (선택 사항, 필요 없으면 삭제 가능) */
+        .top-header {
+            width: 100%;
             text-align: center;
-            background: #fff;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            border-top: 1px solid #f0f0f0;
+            padding: 40px 0;
+            color: white;
+            font-family: 'Pretendard', sans-serif;
         }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>사업설명 대시보드</h1>
-    <p>주요 사업 현황 및 상세 슬라이드 (24장)</p>
-</header>
-
-<div class="dashboard-grid" id="imageGrid">
+    <div class="top-header">
+        <h1>PROJECT DASHBOARD</h1>
+        <p>사업 설명 상세 슬라이드</p>
     </div>
 
-<script>
-    const grid = document.getElementById('imageGrid');
-    const totalImages = 24;
+    <div class="image-container" id="mainDashboard">
+        </div>
 
-    // "슬라이드1.jpg"부터 "슬라이드24.jpg"까지 자동으로 생성
-    for (let i = 1; i <= totalImages; i++) {
-        const fileName = `슬라이드${i}.jpg`;
-        
-        const card = document.createElement('div');
-        card.className = 'card';
-        
-        // src="./${fileName}" : HTML과 같은 위치의 파일을 참조
-        card.innerHTML = `
-            <img src="./${fileName}" alt="사업설명 ${i}" onerror="this.src='https://via.placeholder.com/400x225?text=${fileName}+없음'">
-            <div class="card-info">PAGE ${i.toString().padStart(2, '0')}</div>
-        `;
-        
-        grid.appendChild(card);
-    }
-</script>
+    <script>
+        // 1. 여기에 파일명을 순서대로 모두 입력하세요.
+        // 확장자(.jpg)까지 정확하게 적어주시면 됩니다.
+        const slideFiles = [
+            "슬라이드1.jpg", "슬라이드2.jpg", "슬라이드3.jpg", "슬라이드4.jpg",
+            "슬라이드5.jpg", "슬라이드6.jpg", "슬라이드7.jpg", "슬라이드8.jpg",
+            "슬라이드9.jpg", "슬라이드10.jpg", "슬라이드11.jpg", "슬라이드12.jpg",
+            "슬라이드13.jpg", "슬라이드14.jpg", "슬라이드15.jpg", "슬라이드16.jpg",
+            "슬라이드17.jpg", "슬라이드18.jpg", "슬라이드19.jpg", "슬라이드20.jpg",
+            "슬라이드21.jpg", "슬라이드22.jpg", "슬라이드23.jpg", "슬라이드24.jpg"
+        ];
+
+        const dashboard = document.getElementById('mainDashboard');
+
+        // 2. 파일 리스트를 읽어서 순차적으로 이미지 태그 생성
+        slideFiles.forEach((file) => {
+            const img = document.createElement('img');
+            img.src = `./${file}`; // HTML과 같은 위치
+            img.className = 'business-slide';
+            img.alt = file;
+            
+            // 이미지 로드 실패 시 대체 처리 (파일 이름 오타 방지)
+            img.onerror = function() {
+                this.style.display = 'none'; 
+                console.error(file + " 파일을 찾을 수 없습니다.");
+            };
+
+            dashboard.appendChild(img);
+        });
+    </script>
 
 </body>
 </html>
