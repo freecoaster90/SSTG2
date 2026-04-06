@@ -3,579 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>서산 바이오·웰빙·연구 특구</title>
+    <title>사업설명 대시보드</title>
     <style>
         :root {
-            --primary-color: #1a2a3a;
-            --accent-color: #007bff;
-            --bg-color: #f8f9fa;
+            --bg-color: #f4f7f6;
             --card-bg: #ffffff;
-            --border-radius: 16px;
-            --danger-color: #ff4d4f;
+            --primary-color: #2c3e50;
         }
 
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            font-family: 'Pretendard', sans-serif;
             background-color: var(--bg-color);
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px;
             color: #333;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
         }
 
         header {
-            background: var(--primary-color);
-            color: white;
-            padding: 30px;
-            border-radius: var(--border-radius);
             text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 50px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        /* 반응형 그리드 시스템 */
+        .dashboard-grid {
+            display: grid;
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+            /* 기본: 모바일 (1열) */
+            grid-template-columns: repeat(1, 1fr);
+        }
+
+        /* 태블릿: 2열 */
+        @media (min-width: 768px) {
+            .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* 데스크톱: 3열 */
+        @media (min-width: 1024px) {
+            .dashboard-grid { grid-template-columns: repeat(3, 1fr); }
         }
 
         .card {
             background: var(--card-bg);
-            padding: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-        }
-
-        h2 { 
-            font-size: 1.4rem;
-            border-left: 6px solid var(--accent-color); 
-            padding-left: 15px; 
-            margin-bottom: 20px;
-            color: var(--primary-color);
-        }
-
-        .flex-row {
-            display: flex;
-            gap: 20px;
-            align-items: stretch; /* 높이를 맞추기 위해 stretch로 변경 */
-        }
-
-        .table-side { flex: 6.5; }
-        .image-side { flex: 3.5; position: sticky; top: 20px; display: flex; align-items: center; }
-
-        .info-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95rem;
-        }
-        .info-table th, .info-table td {
-            padding: 10px;
-            border: 1px solid #edf2f7;
-            text-align: center;
-        }
-        .info-table th { background: #fcfcfc; color: #666; font-weight: 600; }
-        
-        .text-left { text-align: left !important; padding-left: 15px !important; }
-        .text-right { text-align: right !important; padding-right: 15px !important; }
-        .bg-sub { background-color: #f9f9f9; font-weight: 600; }
-
-        .visual-container {
-            width: 100%;
-            height: 100%; /* 부모 높이에 맞춤 */
-            background: #f8f9fa;
-            border-radius: 12px;
+            border-radius: 15px;
             overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
             border: 1px solid #eee;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
-        .visual-container img {
-            max-width: 100%;
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .card img {
+            width: 100%;
             height: auto;
-            max-height: 100%;
             display: block;
-            object-fit: contain;
+            aspect-ratio: 16 / 9; /* 이미지 비율 유지 (필요시 조정) */
+            object-fit: cover;
         }
 
-        .timeline-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-        }
-        .timeline-card {
-            border: 1px solid #eee;
-            border-radius: 12px;
-            overflow: hidden;
+        .card-info {
+            padding: 15px;
+            text-align: center;
             background: #fff;
-        }
-        .img-container-916 {
-            width: 100%;
-            aspect-ratio: 9 / 16;
-            background: #f1f3f5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            padding: 5px;
-        }
-        .img-container-916 img { width: 100%; height: 100%; object-fit: contain; }
-        .timeline-content { padding: 10px; text-align: center; }
-        .timeline-date { font-weight: 800; color: var(--accent-color); font-size: 0.95rem; }
-
-        /* 메모장 스타일 */
-        .memo-section { background: #fffde7; }
-        .memo-input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
-        .todo-item {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            background: white;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .todo-item.completed span { text-decoration: line-through; color: #aaa; }
-        .todo-item input[type="checkbox"] { margin-right: 15px; transform: scale(1.2); cursor: pointer; }
-        .todo-item span { flex-grow: 1; font-size: 0.95rem; cursor: pointer; padding: 5px; border-radius: 4px; }
-        .todo-item span:hover { background: #f0f0f0; }
-        
-        .edit-input {
-            flex-grow: 1;
             font-size: 0.95rem;
-            padding: 4px 8px;
-            border: 1px solid var(--accent-color);
-            border-radius: 4px;
-            outline: none;
-        }
-
-        .delete-btn {
-            background: none;
-            border: none;
-            color: var(--danger-color);
-            cursor: pointer;
-            font-size: 1.2rem;
-            font-weight: bold;
-            padding: 0 5px;
-            margin-left: 10px;
-            opacity: 0.6;
-        }
-        .delete-btn:hover { opacity: 1; }
-
-        /* 모바일 대응: 좌우 배치 강제 유지 */
-        @media (max-width: 900px) {
-            body { padding: 10px; }
-            .container { gap: 15px; }
-            header { padding: 15px; }
-            header h1 { font-size: 1.1rem; }
-            .card { padding: 15px; }
-            h2 { font-size: 1.1rem; padding-left: 10px; margin-bottom: 15px; }
-
-            /* 밀리지 않게 가로 배치 유지 */
-            .flex-row { 
-                flex-direction: row !important; 
-                gap: 10px; 
-            }
-            .table-side { flex: 6; }
-            .image-side { flex: 4; position: relative; top: 0; }
-
-            /* 표 글자 크기 대폭 축소 (가로 공간 확보) */
-            .info-table { font-size: 0.65rem; }
-            .info-table th, .info-table td { padding: 5px 2px; }
-            
-            /* 타임라인 가로 배치 */
-            .timeline-container {
-                grid-template-columns: repeat(5, 1fr);
-                gap: 5px;
-            }
-            .timeline-date { font-size: 0.5rem; letter-spacing: -1px; }
-            .timeline-content { padding: 5px 2px; }
+            font-weight: 600;
+            color: var(--primary-color);
+            border-top: 1px solid #f0f0f0;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header><h1>서산 바이오·웰빙·연구 특구</h1></header>
+<header>
+    <h1>사업설명 대시보드</h1>
+    <p>주요 사업 현황 및 상세 슬라이드 (24장)</p>
+</header>
 
-    <section class="card">
-        <h2>1. 특구 개요</h2>
-        <table class="info-table">
-            <tr><th width="25%">사업명</th><td class="text-left">서산 바이오·웰빙·연구 특구</td></tr>
-            <tr><th>위치</th><td class="text-left">충남 서산시 부석면 일원</td></tr>
-            <tr><th>면적</th><td class="text-left">5,998,500㎡ (181만평)</td></tr>
-            <tr><th>사업자</th><td class="text-left">현대건설, 현대모비스, 서산시</td></tr>
-            <tr><th>시행기간</th><td class="text-left">2008년 ~ 2025년</td></tr>
-        </table>
-    </section>
-
-    <section class="card">
-        <h2>2. 개발계획 변경 연혁</h2>
-        <div class="timeline-container">
-            <div class="timeline-card"><div class="img-container-916"><img src="images/1.최초지정(2008).jpg" alt="2008"></div><div class="timeline-content"><span class="timeline-date">최초지정 (2008)</span></div></div>
-            <div class="timeline-card"><div class="img-container-916"><img src="images/2.2차특구변경(2013).jpg" alt="2013"></div><div class="timeline-content"><span class="timeline-date">2차 현대모비스유치 (2013)</span></div></div>
-            <div class="timeline-card"><div class="img-container-916"><img src="images/3.4차특구변경(2015).jpg" alt="2015"></div><div class="timeline-content"><span class="timeline-date">4차 현대모비스확장 (2015)</span></div></div>
-            <div class="timeline-card"><div class="img-container-916"><img src="images/4.5차특구변경(2019).jpg" alt="2019"></div><div class="timeline-content"><span class="timeline-date">5차 현대자동차 유치 (2019)</span></div></div>
-            <div class="timeline-card"><div class="img-container-916"><img src="images/5.6차특구변경(2023).jpg" alt="2023"></div><div class="timeline-content"><span class="timeline-date">6차 농업바이오단지 집적화 (2023)</span></div></div>
-        </div>
-    </section>
-
-    <section class="card">
-        <h2>3. 조성 현황</h2>
-        <div class="flex-row">
-            <div class="table-side">
-                <table class="info-table">
-                    <thead>
-                        <tr><th>구분</th><th>세부</th><th>면적</th><th>비율</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr class="bg-sub"><td>합계</td><td>-</td><td class="text-right">73.2</td><td class="text-right">100%</td></tr>
-                        <tr class="bg-sub"><td rowspan="5">개발허가</td><td>소계</td><td class="text-right">61.0</td><td class="text-right">83.3%</td></tr>
-                        <tr><td>모비스</td><td class="text-right">35.0</td><td class="text-right">47.8%</td></tr>
-                        <tr><td>현대차</td><td class="text-right">16.0</td><td class="text-right">21.9%</td></tr>
-                        <tr><td>나인팜</td><td class="text-right">4.6</td><td class="text-right">6.3%</td></tr>
-                        <tr><td>기타</td><td class="text-right">5.4</td><td class="text-right">7.4%</td></tr>
-                        <tr class="bg-sub"><td rowspan="3">실시계획인가</td><td>소계</td><td class="text-right">12.2</td><td class="text-right">16.7%</td></tr>
-                        <tr><td>공원</td><td class="text-right">2.0</td><td class="text-right">2.7%</td></tr>
-                        <tr><td>도로등</td><td class="text-right">10.2</td><td class="text-right">14.0%</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="image-side">
-                <div class="visual-container">
-                    <img src="images/8.조성현황.png" alt="조성현황"> 
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="card">
-        <h2>4. 분양 현황</h2>
-        <div class="flex-row">
-            <div class="table-side">
-                <table class="info-table">
-                    <thead>
-                        <tr><th>구분</th><th>세부</th><th>면적</th><th>비율</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr class="bg-sub"><td>계</td><td>-</td><td class="text-right">125.0</td><td class="text-right">100%</td></tr>
-                        <tr><td rowspan="3">기매각</td><td>소계</td><td class="text-right">44.0</td><td class="text-right">35.2%</td></tr>
-                        <tr><td>모비스</td><td class="text-right">35.0</td><td class="text-right">28.0%</td></tr>
-                        <tr><td>기타</td><td class="text-right">9.0</td><td class="text-right">7.2%</td></tr>
-                        <tr><td rowspan="2">임대</td><td>현대차</td><td class="text-right">16.0</td><td class="text-right">12.8%</td></tr>
-                        <tr><td>충남</td><td class="text-right">9.0</td><td class="text-right">7.2%</td></tr>
-                        <tr><td rowspan="3">잔여</td><td>소계</td><td class="text-right">56.0</td><td class="text-right">44.8%</td></tr>
-                        <tr><td>연구시설</td><td class="text-right">19.0</td><td class="text-right">15.2%</td></tr>
-                        <tr><td>상업등</td><td class="text-right">37.0</td><td class="text-right">29.6%</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="image-side">
-                <div class="visual-container">
-                    <img src="images/9.분양현황.png" alt="분양현황">
-                </div>
-            </div>
-        </div>
-    </section>
-
-<section class="card">
-    <h2>5. 토지이용계획(7차 변경안)</h2>
-    
-    <div class="flex-row" style="margin-bottom: 25px; gap: 15px;">
-        <div class="visual-container" style="flex: 1; aspect-ratio: 6 / 16; height: auto; background: #f1f3f5;">
-            <img src="images/6.기정6차.png" alt="토지이용계획도 (기정 6차)" style="width: 100%; height: 100%; object-fit: contain;">
-        </div>
-        <div class="visual-container" style="flex: 1; aspect-ratio: 6 / 16; height: auto; background: #f1f3f5;">
-            <img src="images/7.변경7차.png" alt="토지이용계획도 (변경 7차)" style="width: 100%; height: 100%; object-fit: contain;">
-        </div>
+<div class="dashboard-grid" id="imageGrid">
     </div>
-    </section>
 
-    <div class="table-container" style="overflow-x: auto;">
-        <table class="info-table">
-            <thead>
-                <tr>
-                    <th rowspan="2">구분</th>
-                    <th colspan="2">면적(㎡)</th>
-                    <th colspan="2">면적(만평)</th>
-                    <th rowspan="2">구성비<br>(%)</th>
-                </tr>
-                <tr>
-                    <th>기정(6차)</th>
-                    <th>변경(7차)</th>
-                    <th>기정(6차)</th>
-                    <th>변경(7차)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="bg-sub">
-                    <td>합계</td>
-                    <td class="text-right">5,998,500</td>
-                    <td class="text-right">5,998,500</td>
-                    <td class="text-right">181.5</td>
-                    <td class="text-right">181.5</td>
-                    <td class="text-right">100.0%</td>
-                </tr>
-                <tr>
-                    <td>농업바이오단지</td>
-                    <td class="text-right">731,330</td>
-                    <td class="text-right">784,690</td>
-                    <td class="text-right">22.1</td>
-                    <td class="text-right">23.7</td>
-                    <td class="text-right">13.1%</td>
-                </tr>
-                <tr>
-                    <td>연구시설</td>
-                    <td class="text-right">2,344,832</td>
-                    <td class="text-right">2,445,009</td>
-                    <td class="text-right">70.9</td>
-                    <td class="text-right">74.0</td>
-                    <td class="text-right">40.8%</td>
-                </tr>
-                <tr>
-                    <td>청정수소특화단지</td>
-                    <td class="text-right">0</td>
-                    <td class="text-right">666,387</td>
-                    <td class="text-right">0</td>
-                    <td class="text-right">20.2</td>
-                    <td class="text-right">11.1%</td>
-                </tr>
-                <tr>
-                    <td>관광/의료/체육시설</td>
-                    <td class="text-right">895,752</td>
-                    <td class="text-right">0</td>
-                    <td class="text-right">27.1</td>
-                    <td class="text-right">0</td>
-                    <td class="text-right">0.0%</td>
-                </tr>
-                <tr>
-                    <td>공공시설(도로/녹지)</td>
-                    <td class="text-right">1,857,258</td>
-                    <td class="text-right">1,717,101</td>
-                    <td class="text-right">56.2</td>
-                    <td class="text-right">51.9</td>
-                    <td class="text-right">28.6%</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</section>
+<script>
+    const grid = document.getElementById('imageGrid');
+    const totalImages = 24;
 
-<section class="card" style="background-color: #f0f7ff; border: 1px solid #d0e3ff;">
-        <h2>6. 사업성 분석 결과</h2>
-        <div class="table-container" style="overflow-x: auto;">
-            <table class="info-table">
-                <thead>
-                    <tr>
-                        <th>구분</th>
-                        <th>합계</th>
-                        <th>기발생(~'25년)</th>
-                        <th>잔여</th>
-                        <th>비고</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="bg-sub">총 수입</td>
-                        <td class="text-right">917,459</td>
-                        <td class="text-right">175,101</td>
-                        <td class="text-right">742,358</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="bg-sub">총 사업비</td>
-                        <td class="text-right">670,886</td>
-                        <td class="text-right">296,012</td>
-                        <td class="text-right">374,875</td>
-                        <td></td>
-                    </tr>
-                    <tr style="font-weight: bold; color: var(--accent-color);">
-                        <td class="bg-sub">사업이익</td>
-                        <td class="text-right">246,573</td>
-                        <td class="text-right">-120,910</td>
-                        <td class="text-right">367,483</td>
-                        <td></td>
-                    </tr>
-                    <tr style="font-weight: bold; color: var(--accent-color);">
-                        <td class="bg-sub">조성원가</td>
-                        <td class="text-right">517,526원/평</td>
-                        <td class="text-right">434,712원평</td>
-                        <td class="text-right">609,161원평</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="bg-sub">매출액대비이익률</td>
-                        <td class="text-right">26.9%</td>
-                        <td class="text-right">-69.1%</td>
-                        <td class="text-right">49.5%</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="bg-sub">순현재가치(NPV)</td>
-                        <td colspan="4" class="text-left" style="padding-left: 20px;">17,654 백만원</td>
-                    </tr>
-                    <tr>
-                        <td class="bg-sub">Internal Rate (IRR)</td>
-                        <td colspan="4" class="text-left" style="padding-left: 20px;">9.1%</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <p style="font-size: 0.85rem; color: #666; margin-top: 10px;">* 단위: 백만원 / 물가,지가 2.6~2.7% / 할인율 8% / 당사 실행률 반영.</p>
-        <p style="font-size: 0.85rem; color: #666; margin-top: 10px;">* '7차 변경'을 기준으로 작성(영농형PV 운영수입 미반영).</p>
-    </section>
-
-<section class="card" style="border: 1px solid #e0e0e0; background-color: #ffffff;">
-        <h2>6-2. 부지별 재무 타당성 분석</h2>
-        <div class="table-container" style="overflow-x: auto;">
-            <table class="info-table" style="min-width: 900px;">
-                <thead>
-                    <tr>
-                        <th>구분</th>
-                        <th style="background-color: #e3f2fd;">합계</th>
-                        <th>농업바이오</th>
-                        <th>연구시설</th>
-                        <th>청정수소</th>
-                        <th>지원시설</th>
-                        <th>근생시설</th>
-                        <th>비고</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="bg-sub">사업이익</td>
-                        <td class="text-right" style="font-weight: bold; color: var(--accent-color);">246,573</td>
-                        <td class="text-right">-15,142</td>
-                        <td class="text-right">97,009</td>
-                        <td class="text-right">29,561</td>
-                        <td class="text-right">135,135</td>
-                        <td class="text-right">9</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="bg-sub">순현재가치(NPV)</td>
-                        <td class="text-right" style="font-weight: bold;">17,654</td>
-                        <td class="text-right" style="color: #d32f2f;">-40,534</td>
-                        <td class="text-right">36,343</td>
-                        <td class="text-right" style="color: #d32f2f;">-19,045</td>
-                        <td class="text-right">41,018</td>
-                        <td class="text-right">-128</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="bg-sub">경상수익률(IRR)</td>
-                        <td class="text-right" style="font-weight: bold; background-color: #fff9c4;">9.1%</td>
-                        <td class="text-right">-2.3%</td>
-                        <td class="text-right">15.9%</td>
-                        <td class="text-right">3.6%</td>
-                        <td class="text-right">24.5%</td>
-                        <td class="text-right">-</td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 8px; font-size: 0.85rem; color: #555;">
-            <ul style="margin: 5px 0 0 20px; padding: 0;">
-                <li>청정수소특화단지는 2040년 원형지 매각 가정.</li>
-            </ul>
-        </div>
-    </section>
-    
-    <section class="card memo-section">
-        <h2>7. 현안 메모 관리 (실시간 공유)</h2>
-        <input type="text" id="todoInput" class="memo-input" placeholder="새로운 현안을 입력하고 Enter...">
-        <div id="todoList"></div>
-    </section>
-</div>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyAjTduWFsghyfjduX6CXRWk6ZMU5ENMJf4",
-        authDomain: "sstg-dd698.firebaseapp.com",
-        databaseURL: "https://sstg-dd698-default-rtdb.firebaseio.com",
-        projectId: "sstg-dd698",
-        storageBucket: "sstg-dd698.firebasestorage.app",
-        messagingSenderId: "638846833000",
-        appId: "1:638846833000:web:6ae8367812830a7ecf06dd",
-        measurementId: "G-1DPVPCX5KK"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const todoRef = ref(db, 'seosan_todos');
-
-    const todoInput = document.getElementById('todoInput');
-    const todoList = document.getElementById('todoList');
-
-    onValue(todoRef, (snapshot) => {
-        todoList.innerHTML = '';
-        const data = snapshot.val();
-        if (data) {
-            const items = Object.keys(data).map(id => ({ id, ...data[id] }))
-                            .sort((a, b) => b.timestamp - a.timestamp);
-            items.forEach(item => renderTodo(item.id, item.text, item.completed));
-        }
-    });
-
-    todoInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && todoInput.value.trim()) {
-            push(todoRef, {
-                text: todoInput.value.trim(),
-                completed: false,
-                timestamp: Date.now()
-            });
-            todoInput.value = '';
-        }
-    });
-
-    function renderTodo(id, text, completed) {
-        const div = document.createElement('div');
-        div.className = `todo-item ${completed ? 'completed' : ''}`;
+    // "슬라이드1.jpg"부터 "슬라이드24.jpg"까지 자동으로 생성
+    for (let i = 1; i <= totalImages; i++) {
+        const fileName = `슬라이드${i}.jpg`;
         
-        const chk = document.createElement('input');
-        chk.type = 'checkbox';
-        chk.checked = completed;
-        chk.onchange = () => update(ref(db, `seosan_todos/${id}`), { completed: chk.checked });
+        const card = document.createElement('div');
+        card.className = 'card';
         
-        const span = document.createElement('span');
-        span.textContent = text;
-        span.onclick = () => {
-            if (completed) return;
-            const input = document.createElement('input');
-            input.className = 'edit-input';
-            input.value = span.textContent;
-            const finishEdit = () => {
-                const newText = input.value.trim();
-                if (newText && newText !== text) update(ref(db, `seosan_todos/${id}`), { text: newText });
-                else input.replaceWith(span);
-            };
-            input.onblur = finishEdit;
-            input.onkeypress = (e) => { if (e.key === 'Enter') finishEdit(); };
-            span.replaceWith(input);
-            input.focus();
-        };
-
-        const delBtn = document.createElement('button');
-        delBtn.innerHTML = '&times;';
-        delBtn.className = 'delete-btn';
-        delBtn.onclick = () => { if(confirm('삭제하시겠습니까?')) remove(ref(db, `seosan_todos/${id}`)); };
+        // src="./${fileName}" : HTML과 같은 위치의 파일을 참조
+        card.innerHTML = `
+            <img src="./${fileName}" alt="사업설명 ${i}" onerror="this.src='https://via.placeholder.com/400x225?text=${fileName}+없음'">
+            <div class="card-info">PAGE ${i.toString().padStart(2, '0')}</div>
+        `;
         
-        div.append(chk, span, delBtn);
-        todoList.appendChild(div);
+        grid.appendChild(card);
     }
 </script>
+
 </body>
 </html>
